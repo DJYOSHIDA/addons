@@ -102,14 +102,25 @@ RS485_DEVICE = {
     },
     # 각방 난방 제어
     "thermostat": {
-        "query":    { "id": 0x36, "cmd": 0x01, },
-        "state":    { "id": 0x36, "cmd": 0x81, },
-        "last":     { },
+        "query": { "id": 0x36, "cmd": 0x01, },
+        "state": { "id": 0x36, "cmd": 0x81, },
+        "last": { },
 
-        "away":    { "id": 0x36, "cmd": 0x45, "ack": 0x00, },
-        "target":   { "id": 0x36, "cmd": 0x44, "ack": 0xC4, },
+        "away": { "id": 0x36, "cmd": 0x45, "ack": 0x00, },
+        "target": { "id": 0x36, "cmd": 0x44, "ack": 0xC4, },
     },
-
+    'plug': {
+          'state': { 'id': 0x50, 'cmd': 0x81 },
+          'power': { 'id': 0x50, 'cmd': 0x43, 'ack': 0xC3 }
+    },
+    'gasvalve': {
+        'state': { 'id': 0x12, "cmd": 0x81 },
+        'power': { 'id': 0x12, 'cmd': 0x41, 'ack': 0xC1 } # 잠그기만 가능
+    },
+    'batch': {
+        'state':    { 'id': 0x33, 'cmd': 0x81 },
+        'press':    { 'id': 0x33, 'cmd': 0x41, 'ack': 0xC1 }
+    },
     # 환기장치 (전열교환기)
     "fan": {
         "query":    { "id": 0x32, "cmd":  0x01, },
@@ -117,9 +128,9 @@ RS485_DEVICE = {
         "last":     { },
 
         "power":    { "id": 0x32, "cmd": 0x41, "ack": 0xC1 },
-        # "speed":    { "id": 0x32, "length":  6, "pos": 2, },
+        "speed":    { "id": 0x32, "cmd":  0x42, "ack": 0xC4, },
     },
-        
+
 # KTDO: 기존 코드
 #        "query":    { "header": 0xAC79, "length":  5, "id": 2, },
 #        "state":    { "header": 0xB079, "length":  5, "id": 2, "parse": {("power", 3, "bitmap")} },
@@ -280,22 +291,22 @@ DISCOVERY_PAYLOAD = {
         "stat_t": "~/power/state",
         "cmd_t": "~/power/command",
     } ],
- #   "fan": [ {
- #       "_intg": "fan",
- #       "~": "{prefix}/fan/{idn}",
- #       "name": "{prefix}_fan_{idn}",
- #       "opt": True,
- #       "stat_t": "~/power/state",
- #       "cmd_t": "~/power/command",
- #       "spd_stat_t": "~/speed/state",
- #       "spd_cmd_t": "~/speed/command",
- #       "pl_on": 5,
- #       "pl_off": 6,
- #       "pl_lo_spd": 3,
- #       "pl_med_spd": 2,
- #       "pl_hi_spd": 1,
- #       "spds": ["low", "medium", "high"],
- #   } ],
+   "fan": [ {
+       "_intg": "fan",
+       "~": "{prefix}/fan/{idn}",
+       "name": "{prefix}_fan_{idn}",
+       "opt": True,
+       "stat_t": "~/power/state",
+       "cmd_t": "~/power/command",
+       "spd_stat_t": "~/speed/state",
+       "spd_cmd_t": "~/speed/command",
+       "pl_on": 5,
+       "pl_off": 6,
+       "pl_lo_spd": 3,
+       "pl_med_spd": 2,
+       "pl_hi_spd": 1,
+       "spds": ["low", "medium", "high"],
+   } ],
     "thermostat": [ {
         "_intg": "climate",
         "~": "{prefix}/thermostat/{grp}_{id}",
@@ -310,51 +321,51 @@ DISCOVERY_PAYLOAD = {
         "min_temp": 5,
         "max_temp": 40,
     } ],
-#    "plug": [ {
-#        "_intg": "switch",
-#        "~": "{prefix}/plug/{idn}/power",
-#        "name": "{prefix}_plug_{idn}",
-#        "stat_t": "~/state",
-#        "cmd_t": "~/command",
-#        "icon": "mdi:power-plug",
-#    },
-#    {
-#        "_intg": "switch",
-#        "~": "{prefix}/plug/{idn}/idlecut",
-#        "name": "{prefix}_plug_{idn}_standby_cutoff",
-#        "stat_t": "~/state",
-#        "cmd_t": "~/command",
-#        "icon": "mdi:leaf",
-#    },
-#    {
-#        "_intg": "sensor",
-#        "~": "{prefix}/plug/{idn}",
-#        "name": "{prefix}_plug_{idn}_power_usage",
-#        "stat_t": "~/current/state",
-#        "unit_of_meas": "W",
-#    } ],
-#    "cutoff": [ {
-#        "_intg": "switch",
-#        "~": "{prefix}/cutoff/{idn}/power",
-#        "name": "{prefix}_light_cutoff_{idn}",
-#        "stat_t": "~/state",
-#        "cmd_t": "~/command",
-#    } ],
-#    "gas_valve": [ {
-#        "_intg": "sensor",
-#        "~": "{prefix}/gas_valve/{idn}",
-#        "name": "{prefix}_gas_valve_{idn}",
-#        "stat_t": "~/power/state",
-#        "icon": "mdi:valve",
-#    } ],
-#    "energy": [ {
-#        "_intg": "sensor",
-#        "~": "{prefix}/energy/{idn}",
-#        "name": "_",
-#        "stat_t": "~/current/state",
-#        "unit_of_meas": "_",
-#        "val_tpl": "_",
-#    } ],
+   "plug": [ {
+       "_intg": "switch",
+       "~": "{prefix}/plug/{idn}/power",
+       "name": "{prefix}_plug_{idn}",
+       "stat_t": "~/state",
+       "cmd_t": "~/command",
+       "icon": "mdi:power-plug",
+   },
+   {
+       "_intg": "switch",
+       "~": "{prefix}/plug/{idn}/idlecut",
+       "name": "{prefix}_plug_{idn}_standby_cutoff",
+       "stat_t": "~/state",
+       "cmd_t": "~/command",
+       "icon": "mdi:leaf",
+   },
+   {
+       "_intg": "sensor",
+       "~": "{prefix}/plug/{idn}",
+       "name": "{prefix}_plug_{idn}_power_usage",
+       "stat_t": "~/current/state",
+       "unit_of_meas": "W",
+   } ],
+   "cutoff": [ {
+       "_intg": "switch",
+       "~": "{prefix}/cutoff/{idn}/power",
+       "name": "{prefix}_light_cutoff_{idn}",
+       "stat_t": "~/state",
+       "cmd_t": "~/command",
+   } ],
+   "gas_valve": [ {
+       "_intg": "sensor",
+       "~": "{prefix}/gas_valve/{idn}",
+       "name": "{prefix}_gas_valve_{idn}",
+       "stat_t": "~/power/state",
+       "icon": "mdi:valve",
+   } ],
+   "energy": [ {
+       "_intg": "sensor",
+       "~": "{prefix}/energy/{idn}",
+       "name": "_",
+       "stat_t": "~/current/state",
+       "unit_of_meas": "_",
+       "val_tpl": "_",
+   } ],
 }
 
 STATE_HEADER = {
