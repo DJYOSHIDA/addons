@@ -109,6 +109,16 @@ RS485_DEVICE = {
         "away":    { "id": 0x36, "cmd": 0x45, "ack": 0x00, },
         "target":   { "id": 0x36, "cmd": 0x44, "ack": 0xC4, },
     },
+
+    # 환기장치 (전열교환기)
+    "fan": {
+        "query":    { "id": 0x32, "cmd":  0x01, },
+        "state":    { "id": 0x32, "cmd":  0x81, },
+        "last":     { },
+
+        "power":    { "id": 0x32, "cmd": 0x41, "ack": 0xC1 },
+        # "speed":    { "id": 0x32, "length":  6, "pos": 2, },
+    },
         
 # KTDO: 기존 코드
 #        "query":    { "header": 0xAC79, "length":  5, "id": 2, },
