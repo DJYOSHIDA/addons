@@ -1122,20 +1122,20 @@ def serial_new_device(device, packet):
 
             mqtt_discovery(payload)
 
-#    elif device in DISCOVERY_PAYLOAD:
-#        for payloads in DISCOVERY_PAYLOAD[device]:
-#            payload = payloads.copy()
-#            payload["~"] = payload["~"].format(prefix=prefix, idn=idn)
-#            payload["name"] = payload["name"].format(prefix=prefix, idn=idn)
-#
-#            # 실시간 에너지 사용량에는 적절한 이름과 단위를 붙여준다 (단위가 없으면 그래프로 출력이 안됨)
-#            # KTDO: Ezville에 에너지 확인 쿼리 없음
-#            if device == "energy":
-#                payload["name"] = "{}_{}_consumption".format(prefix, ("power", "gas", "water")[idn])
-#                payload["unit_of_meas"] = ("W", "m³/h", "m³/h")[idn]
-#                payload["val_tpl"] = ("{{ value }}", "{{ value | float / 100 }}", "{{ value | float / 100 }}")[idn]
-#
-#            mqtt_discovery(payload)
+   elif device in DISCOVERY_PAYLOAD:
+       for payloads in DISCOVERY_PAYLOAD[device]:
+           payload = payloads.copy()
+           payload["~"] = payload["~"].format(prefix=prefix, idn=idn)
+           payload["name"] = payload["name"].format(prefix=prefix, idn=idn)
+
+           # 실시간 에너지 사용량에는 적절한 이름과 단위를 붙여준다 (단위가 없으면 그래프로 출력이 안됨)
+           # KTDO: Ezville에 에너지 확인 쿼리 없음
+           if device == "energy":
+               payload["name"] = "{}_{}_consumption".format(prefix, ("power", "gas", "water")[idn])
+               payload["unit_of_meas"] = ("W", "m³/h", "m³/h")[idn]
+               payload["val_tpl"] = ("{{ value }}", "{{ value | float / 100 }}", "{{ value | float / 100 }}")[idn]
+
+           mqtt_discovery(payload)
 
 # KTDO: 수정 완료
 def serial_receive_state(device, packet):
